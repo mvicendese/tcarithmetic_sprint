@@ -1,0 +1,5 @@
+{
+  "name": "Firebase Copy of Arithmetic Sprint",
+  "description": "An adaptive, timed arithmetic test for students. Teachers can configure difficulty levels, and the app uses an LLM to analyze student mistakes and provide feedback.",
+  "requestFramePermissions": []
+}

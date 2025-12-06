@@ -1,0 +1,37 @@
+import { IntegerLevelConfig, FractionLevelConfig } from '../types';
+
+export const DEFAULT_INTEGER_LEVELS: IntegerLevelConfig[] = [
+    { level: 1, addition_threshold: 0.6, subtraction_threshold: 0.8, multiplication_threshold: 0.95, addition_min: 0, addition_max: 25, difference_min: 0, difference_max: 12, mult_factor_min: 1, mult_factor_max: 9, div_factor_min: 1, div_factor_max: 5, div_factor_extra: 2 },
+    { level: 2, addition_threshold: 0.4, subtraction_threshold: 0.75, multiplication_threshold: 0.95, addition_min: 0, addition_max: 25, difference_min: 0, difference_max: 12, mult_factor_min: 1, mult_factor_max: 9, div_factor_min: 1, div_factor_max: 5, div_factor_extra: 2 },
+    { level: 3, addition_threshold: 0.4, subtraction_threshold: 0.7, multiplication_threshold: 0.9, addition_min: 0, addition_max: 25, difference_min: 0, difference_max: 12, mult_factor_min: 1, mult_factor_max: 9, div_factor_min: 1, div_factor_max: 5, div_factor_extra: 2 },
+    { level: 4, addition_threshold: 0.35, subtraction_threshold: 0.6, multiplication_threshold: 0.8, addition_min: 0, addition_max: 35, difference_min: 0, difference_max: 17, mult_factor_min: 1, mult_factor_max: 12, div_factor_min: 1, div_factor_max: 9, div_factor_extra: 1 },
+    { level: 5, addition_threshold: 0.25, subtraction_threshold: 0.5, multiplication_threshold: 0.75, addition_min: 0, addition_max: 35, difference_min: 0, difference_max: 17, mult_factor_min: 1, mult_factor_max: 12, div_factor_min: 1, div_factor_max: 9, div_factor_extra: 1 },
+    { level: 6, addition_threshold: 0.6, subtraction_threshold: 0.8, multiplication_threshold: 0.95, addition_min: -25, addition_max: 25, difference_min: -12, difference_max: 12, mult_factor_min: -9, mult_factor_max: 9, div_factor_min: -9, div_factor_max: 9, div_factor_extra: 1 },
+    { level: 7, addition_threshold: 0.45, subtraction_threshold: 0.75, multiplication_threshold: 0.95, addition_min: -25, addition_max: 25, difference_min: -12, difference_max: 12, mult_factor_min: -9, mult_factor_max: 9, div_factor_min: -9, div_factor_max: 9, div_factor_extra: 1 },
+    { level: 8, addition_threshold: 0.4, subtraction_threshold: 0.7, multiplication_threshold: 0.9, addition_min: -35, addition_max: 35, difference_min: -20, difference_max: 20, mult_factor_min: -12, mult_factor_max: 12, div_factor_min: -9, div_factor_max: 9, div_factor_extra: 1 },
+    { level: 9, addition_threshold: 0.35, subtraction_threshold: 0.6, multiplication_threshold: 0.8, addition_min: -40, addition_max: 40, difference_min: -25, difference_max: 25, mult_factor_min: -12, mult_factor_max: 12, div_factor_min: -9, div_factor_max: 9, div_factor_extra: 1 },
+    { level: 10, addition_threshold: 0.25, subtraction_threshold: 0.5, multiplication_threshold: 0.75, addition_min: -45, addition_max: 45, difference_min: -25, difference_max: 25, mult_factor_min: -15, mult_factor_max: 15, div_factor_min: -9, div_factor_max: 9, div_factor_extra: 1 },
+    { level: 11, addition_threshold: 0.25, subtraction_threshold: 0.5, multiplication_threshold: 0.75, addition_min: -50, addition_max: 50, difference_min: -30, difference_max: 30, mult_factor_min: -15, mult_factor_max: 15, div_factor_min: -12, div_factor_max: 12, div_factor_extra: 1 },
+    { level: 12, addition_threshold: 0.25, subtraction_threshold: 0.5, multiplication_threshold: 0.75, addition_min: -50, addition_max: 50, difference_min: -30, difference_max: 30, mult_factor_min: -15, mult_factor_max: 15, div_factor_min: -12, div_factor_max: 12, div_factor_extra: 1 },
+    { level: 13, addition_threshold: 0.25, subtraction_threshold: 0.5, multiplication_threshold: 0.75, addition_min: -55, addition_max: 55, difference_min: -35, difference_max: 35, mult_factor_min: -15, mult_factor_max: 15, div_factor_min: -12, div_factor_max: 12, div_factor_extra: 1 },
+    { level: 14, addition_threshold: 0.25, subtraction_threshold: 0.5, multiplication_threshold: 0.75, addition_min: -55, addition_max: 55, difference_min: -35, difference_max: 35, mult_factor_min: -15, mult_factor_max: 15, div_factor_min: -12, div_factor_max: 12, div_factor_extra: 1 },
+    { level: 15, addition_threshold: 0.25, subtraction_threshold: 0.5, multiplication_threshold: 0.75, addition_min: -60, addition_max: 60, difference_min: -40, difference_max: 40, mult_factor_min: -15, mult_factor_max: 15, div_factor_min: -12, div_factor_max: 12, div_factor_extra: 1 },
+    { level: 16, addition_threshold: 0.25, subtraction_threshold: 0.5, multiplication_threshold: 0.75, addition_min: -60, addition_max: 60, difference_min: -40, difference_max: 40, mult_factor_min: -15, mult_factor_max: 15, div_factor_min: -12, div_factor_max: 12, div_factor_extra: 1 },
+    { level: 17, addition_threshold: 0.25, subtraction_threshold: 0.5, multiplication_threshold: 0.75, addition_min: -65, addition_max: 65, difference_min: -55, difference_max: 55, mult_factor_min: -15, mult_factor_max: 15, div_factor_min: -12, div_factor_max: 12, div_factor_extra: 1 },
+    { level: 18, addition_threshold: 0.25, subtraction_threshold: 0.5, multiplication_threshold: 0.75, addition_min: -70, addition_max: 70, difference_min: -60, difference_max: 60, mult_factor_min: -20, mult_factor_max: 20, div_factor_min: -15, div_factor_max: 15, div_factor_extra: 1 },
+    { level: 19, addition_threshold: 0.25, subtraction_threshold: 0.5, multiplication_threshold: 0.75, addition_min: -70, addition_max: 70, difference_min: -60, difference_max: 60, mult_factor_min: -20, mult_factor_max: 20, div_factor_min: -15, div_factor_max: 15, div_factor_extra: 1 },
+    { level: 20, addition_threshold: 0.25, subtraction_threshold: 0.5, multiplication_threshold: 0.75, addition_min: -75, addition_max: 75, difference_min: -65, difference_max: 65, mult_factor_min: -20, mult_factor_max: 20, div_factor_min: -15, div_factor_max: 15, div_factor_extra: 1 }
+];
+
+export const DEFAULT_FRACTION_LEVELS: FractionLevelConfig[] = [
+    { level: 11, integer_operation_threshold: 0.8, addition_threshold: 0.15, subtraction_threshold: 0.3, multiplication_threshold: 0.8, numerator_max: 5 },
+    { level: 12, integer_operation_threshold: 0.8, addition_threshold: 0.20, subtraction_threshold: 0.35, multiplication_threshold: 0.75, numerator_max: 5 },
+    { level: 13, integer_operation_threshold: 0.75, addition_threshold: 0.20, subtraction_threshold: 0.35, multiplication_threshold: 0.75, numerator_max: 6 },
+    { level: 14, integer_operation_threshold: 0.75, addition_threshold: 0.25, subtraction_threshold: 0.5, multiplication_threshold: 0.75, numerator_max: 6 },
+    { level: 15, integer_operation_threshold: 0.7, addition_threshold: 0.25, subtraction_threshold: 0.5, multiplication_threshold: 0.75, numerator_max: 7 },
+    { level: 16, integer_operation_threshold: 0.7, addition_threshold: 0.25, subtraction_threshold: 0.5, multiplication_threshold: 0.75, numerator_max: 8 },
+    { level: 17, integer_operation_threshold: 0.65, addition_threshold: 0.25, subtraction_threshold: 0.5, multiplication_threshold: 0.75, numerator_max: 9 },
+    { level: 18, integer_operation_threshold: 0.65, addition_threshold: 0.3, subtraction_threshold: 0.6, multiplication_threshold: 0.8, numerator_max: 10 },
+    { level: 19, integer_operation_threshold: 0.6, addition_threshold: 0.3, subtraction_threshold: 0.6, multiplication_threshold: 0.8, numerator_max: 12 },
+    { level: 20, integer_operation_threshold: 0.6, addition_threshold: 0.35, subtraction_threshold: 0.7, multiplication_threshold: 0.8, numerator_max: 15 }
+];

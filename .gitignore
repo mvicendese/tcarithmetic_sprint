@@ -1,0 +1,45 @@
+
+# Logs
+*.log
+
+# Firebase
+# Firebase
+firebase-debug.log
+# firestore.indexes.json
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment variables
+.env
+.env.*
+
+
+# Logs
+*.log
+
+# Firebase
+# Firebase
+firebase-debug.log
+# firestore.indexes.json
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment variables
+.env
+.env.*
+
+# Other
+.DS_Store
+
+users.json
+serviceAccountKey.json
+factory_scripts/
+factory_scripts/_backup/
