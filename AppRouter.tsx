@@ -62,6 +62,7 @@ const AppRouter: React.FC = () => {
 
                 <Route element={<PrivateRoute allowedRoles={['teacher']} checkAdmin={true} />}>
                     <Route path="/admin" element={<AdminDashboard />} />
+                    <Route path="/admin/class/:classId" element={<ClassDetailRoute backTo="/admin" />} />
                 </Route>
 
                 {/* Catch all */}

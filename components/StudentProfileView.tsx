@@ -125,7 +125,7 @@ const StudentProfileView: React.FC<StudentProfileViewProps> = ({ student, onBack
         }));
 
     return (
-        <div className="min-h-screen bg-slate-900 p-6">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-6 transition-colors duration-200">
             <ResultsModal
                 isOpen={gameState === 'results'}
                 onClose={() => setGameState('idle')}
@@ -137,7 +137,7 @@ const StudentProfileView: React.FC<StudentProfileViewProps> = ({ student, onBack
                 <div>
                     <button
                         onClick={onBack}
-                        className="text-blue-400 hover:text-blue-300 mb-2 flex items-center gap-2 transition-colors"
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 mb-2 flex items-center gap-2 transition-colors"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path
@@ -148,7 +148,7 @@ const StudentProfileView: React.FC<StudentProfileViewProps> = ({ student, onBack
                         </svg>
                         Back to Class
                     </button>
-                    <h1 className="text-3xl font-bold text-white">
+                    <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
                         {student.firstName} {student.surname}
                     </h1>
                 </div>
@@ -157,7 +157,7 @@ const StudentProfileView: React.FC<StudentProfileViewProps> = ({ student, onBack
             <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                 {/* Left Column: Student Info (replaces Start Test) */}
                 <div className="space-y-6 lg:col-span-1">
-                    <div className="bg-slate-800 rounded-xl p-6 border border-slate-700 flex flex-col h-full">
+                    <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 flex flex-col h-full shadow-sm transition-colors">
                         <div className="space-y-4 flex-grow">
                             {/* Enrolled Classes (Inline) */}
                             <div>
@@ -166,7 +166,7 @@ const StudentProfileView: React.FC<StudentProfileViewProps> = ({ student, onBack
                                 ) : (
                                     <div className="space-y-1">
                                         {enrolledClasses.map(c => (
-                                            <p key={c.id} className="text-xl font-bold text-slate-200">
+                                            <p key={c.id} className="text-xl font-bold text-slate-800 dark:text-slate-200">
                                                 {c.name}
                                             </p>
                                         ))}
@@ -177,9 +177,9 @@ const StudentProfileView: React.FC<StudentProfileViewProps> = ({ student, onBack
                             {/* General AI Summary */}
                             <div>
                                 <div className="flex items-center gap-2 mb-1">
-                                    <p className="text-xs text-slate-400 uppercase tracking-wider font-bold">Summary</p>
+                                    <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold">Summary</p>
                                 </div>
-                                <div className="bg-slate-900/50 p-3 rounded-lg border border-slate-700 text-sm text-slate-300 leading-relaxed min-h-[80px]">
+                                <div className="bg-slate-100 dark:bg-slate-900/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 text-sm text-slate-600 dark:text-slate-300 leading-relaxed min-h-[80px]">
                                     {student.aiSummary ? (
                                         student.aiSummary
                                     ) : (
@@ -190,8 +190,8 @@ const StudentProfileView: React.FC<StudentProfileViewProps> = ({ student, onBack
                         </div>
 
                         {/* Current Level (at bottom, replaces button) */}
-                        <div className="mt-8 pt-6 border-t border-slate-700">
-                            <div className="w-full bg-slate-700/50 text-slate-300 font-bold py-3 px-4 rounded-lg text-center shadow-inner">
+                        <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700">
+                            <div className="w-full bg-slate-200 dark:bg-slate-700/50 text-slate-700 dark:text-slate-300 font-bold py-3 px-4 rounded-lg text-center shadow-inner">
                                 Current Level {student.currentLevel || 1}
                             </div>
                         </div>
@@ -200,18 +200,18 @@ const StudentProfileView: React.FC<StudentProfileViewProps> = ({ student, onBack
 
                 {/* Right Column: Test Results Table */}
                 <div className="lg:col-span-1">
-                    <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm transition-colors">
                         <div className="flex justify-between items-center mb-4">
-                            <h3 className="text-xl font-bold text-slate-200">Results</h3>
+                            <h3 className="text-xl font-bold text-slate-800 dark:text-slate-200">Results</h3>
                             <div className="flex gap-2">
                                 <button
                                     disabled={currentPage === 1}
                                     onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                                    className="p-1 text-slate-400 hover:text-white disabled:opacity-30"
+                                    className="p-1 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30"
                                 >
                                     &lt;
                                 </button>
-                                <span className="text-slate-400">{currentPage} / {Math.max(1, totalPages)}</span>
+                                <span className="text-slate-500 dark:text-slate-400">{currentPage} / {Math.max(1, totalPages)}</span>
                                 <button
                                     disabled={currentPage === totalPages}
                                     onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
@@ -225,7 +225,7 @@ const StudentProfileView: React.FC<StudentProfileViewProps> = ({ student, onBack
                         <div className="overflow-hidden">
                             <table className="w-full text-sm">
                                 <thead>
-                                    <tr className="text-slate-400 border-b border-slate-600">
+                                    <tr className="text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-600">
                                         <th className="text-left py-2 font-medium">Date</th>
                                         <th className="text-left py-2 font-medium">Level</th>
                                         <th className="text-left py-2 font-medium">Correct</th>
@@ -243,11 +243,11 @@ const StudentProfileView: React.FC<StudentProfileViewProps> = ({ student, onBack
                                                         setLastAttempt(result.attempt);
                                                         setGameState('results');
                                                     }}
-                                                    className="border-b border-slate-700/50 text-slate-300 hover:bg-slate-700/50 cursor-pointer transition-colors"
+                                                    className="border-b border-slate-200 dark:border-slate-700/50 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"
                                                 >
                                                     <td className="py-3">{result.dateStr}</td>
                                                     <td className="py-3">Level {result.level}</td>
-                                                    <td className="py-3 font-bold text-white">{result.correct}</td>
+                                                    <td className="py-3 font-bold text-slate-900 dark:text-white">{result.correct}</td>
                                                     <td className="py-3">{formatTimeRemaining(result.timeRemaining)}</td>
                                                     {/*                                                 <td className="py-3">
                                                         {result.attempt.summary ? (
@@ -280,7 +280,7 @@ const StudentProfileView: React.FC<StudentProfileViewProps> = ({ student, onBack
             </div>
 
             {/* Chart */}
-            <div className="max-w-7xl mx-auto bg-slate-800 rounded-xl p-6 border border-slate-700 h-80">
+            <div className="max-w-7xl mx-auto bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 h-80 shadow-sm transition-colors">
                 <ErrorBoundary fallback={<div className="text-white">Chart failed to load.</div>}>
                     <ProgressChart data={chartData} />
                 </ErrorBoundary>

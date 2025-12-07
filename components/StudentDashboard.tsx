@@ -146,7 +146,8 @@ const StudentDashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white font-sans transition-colors duration-200">
-
+      {/* Gradient Ribbon Bar */}
+      <div className="h-1 bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-500" />
       {/* Header Banner */}
       <div className="bg-white/80 dark:bg-slate-800/50 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 p-6 sticky top-0 z-10 transition-colors duration-200">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">

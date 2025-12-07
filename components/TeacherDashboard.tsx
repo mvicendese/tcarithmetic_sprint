@@ -97,6 +97,20 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ user, onSwitchToAdm
         }
     };
 
+    const handleDeleteClass = async (classId: string, className: string, e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (!window.confirm(`Are you sure you want to delete "${className}"?\n\nStudents will NOT be deleted - they will be moved to "No Class".`)) {
+            return;
+        }
+        try {
+            await api.deleteClass(classId);
+            setTeacherClasses((prev) => prev.filter((c) => c.id !== classId));
+        } catch (error) {
+            console.error('Failed to delete class:', error);
+            alert(`Failed to delete class: ${(error as Error).message}`);
+        }
+    };
+
     const startTestDrive = () => {
         const testUser: StudentUser = {
             ...currentUser,
@@ -212,6 +226,8 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ user, onSwitchToAdm
     // Main Teacher Dashboard Layout
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white font-sans transition-colors duration-200">
+            {/* Gradient Ribbon Bar */}
+            <div className="h-1 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500" />
             {/* Header Banner */}
             <div className="bg-white/80 dark:bg-slate-800/50 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 p-6 sticky top-0 z-10 transition-colors duration-200">
                 <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -284,12 +300,23 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ user, onSwitchToAdm
                                                 {/* Green arrow removed as per user request */}
                                             </div>
                                         </div>
-                                        <button
-                                            onClick={(e) => handleLeaveClass(c.id, e)}
-                                            className="absolute top-5 right-5 px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-300 border border-red-500/30 rounded-lg text-xs font-bold transition-all opacity-0 group-hover:opacity-100"
-                                        >
-                                            Leave Class
-                                        </button>
+                                        <div className="absolute top-5 right-5 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            {c.id !== 'no-class' && (c.teacherIds || []).includes(currentUser.id) && (
+                                                <button
+                                                    onClick={(e) => handleDeleteClass(c.id, c.name, e)}
+                                                    title="Delete Class"
+                                                    className="px-3 py-1.5 bg-red-500/10 hover:bg-red-500/30 text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-300 border border-red-500/30 rounded-lg text-xs font-bold transition-all"
+                                                >
+                                                    🗑️ Delete
+                                                </button>
+                                            )}
+                                            <button
+                                                onClick={(e) => handleLeaveClass(c.id, e)}
+                                                className="px-3 py-1.5 bg-slate-500/10 hover:bg-slate-500/20 text-slate-600 dark:text-slate-400 hover:text-slate-500 dark:hover:text-slate-300 border border-slate-500/30 rounded-lg text-xs font-bold transition-all"
+                                            >
+                                                Leave
+                                            </button>
+                                        </div>
                                     </div>
                                 ))}
                             {teacherClasses.length === 0 && (

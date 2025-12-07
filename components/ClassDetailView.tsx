@@ -396,9 +396,12 @@ const ClassDetailView: React.FC<{
                                                 key={s.id}
                                                 className="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-600 hover:border-blue-400 transition-colors"
                                             >
-                                                <span className="font-medium text-slate-700 dark:text-slate-200">
+                                                <button
+                                                    onClick={() => setSelectedStudent(s as StudentUser)}
+                                                    className="font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-left"
+                                                >
                                                     {s.firstName} {s.surname}
-                                                </span>
+                                                </button>
                                                 <button
                                                     onClick={() => addStudent(s.id)}
                                                     className="px-3 py-1 text-xs rounded-md bg-blue-500 text-white hover:bg-blue-600 font-bold transition-colors"

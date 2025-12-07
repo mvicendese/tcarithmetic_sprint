@@ -210,25 +210,7 @@ const AdminDashboard: React.FC = () => {
         );
     }
 
-    if (selectedClass) {
-        return (
-            <div className="min-h-screen bg-slate-900">
-                <div className="bg-slate-800/50 backdrop-blur-md border-b border-slate-700 p-4 sticky top-0 z-20">
-                    <div className="max-w-7xl mx-auto">
-                        <button
-                            onClick={() => setSelectedClass(null)}
-                            className="text-blue-400 hover:text-blue-300 flex items-center gap-2 transition-colors font-medium"
-                        >
-                            &larr; Back to Admin Dashboard
-                        </button>
-                    </div>
-                </div>
-                <div className="max-w-7xl mx-auto p-6">
-                    <ClassDetailView aClass={selectedClass} onBack={() => setSelectedClass(null)} />
-                </div>
-            </div>
-        );
-    }
+    // Note: selectedClass is now handled via navigate() - removed inline rendering
 
     // View Selected Student from Search
     if (selectedStudent) {
@@ -316,6 +298,8 @@ const AdminDashboard: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white font-sans transition-colors duration-200">
+            {/* Gradient Ribbon Bar */}
+            <div className="h-1 bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500" />
             {/* Header */}
             <div className="bg-white/80 dark:bg-slate-800/50 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 p-6 sticky top-0 z-10 transition-colors duration-200">
                 <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -474,7 +458,7 @@ const AdminDashboard: React.FC = () => {
                                         <button
                                             key={cls.id}
                                             type="button"
-                                            onClick={() => setSelectedClass(cls)}
+                                            onClick={() => navigate(`/admin/class/${cls.id}`)}
                                             className="w-full text-left group p-4 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-600 transition-all duration-200 flex justify-between items-center cursor-pointer"
                                         >
                                             <div className="flex items-center gap-4">
