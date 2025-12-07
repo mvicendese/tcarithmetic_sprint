@@ -7,6 +7,7 @@ import {
     getDocs,
     setDoc,
     updateDoc,
+    deleteDoc,
     query,
     where,
     arrayUnion,
@@ -198,4 +199,68 @@ export const addTeacherToClass = async (
     await updateDoc(doc(db, 'users', teacherId), {
         classIds: arrayUnion(classId)
     });
+};
+
+// ============================================================================
+// Delete Class (with student cleanup)
+// ============================================================================
+
+/**
+ * Deletes a class and properly cleans up all references.
+ * - Removes class from all students' classIds
+ * - Students with no remaining classes are added to "No Class"
+ * - Removes class from all teachers' classIds
+ * - Deletes the class document
+ * 
+ * Students are NOT deleted - only their class association is removed.
+ */
+export const deleteClass = async (classId: string): Promise<void> => {
+    // Prevent deleting the special "No Class"
+    if (classId === NO_CLASS_ID) {
+        throw new Error('Cannot delete the "No Class" placeholder.');
+    }
+
+    // Get class data
+    const classDoc = await getDoc(doc(db, 'classes', classId));
+    if (!classDoc.exists()) {
+        throw new Error('Class not found');
+    }
+    const classData = classDoc.data() as Omit<Class, 'id'>;
+
+    // 1. Remove class from all students and handle "No Class" fallback
+    const studentIds = classData.studentIds || [];
+    for (const studentId of studentIds) {
+        // Remove this class from student's classIds
+        await updateDoc(doc(db, 'users', studentId), {
+            classIds: arrayRemove(classId)
+        });
+
+        // Check if student has any remaining classes
+        const studentDoc = await getDoc(doc(db, 'users', studentId));
+        if (studentDoc.exists()) {
+            const studentData = studentDoc.data() as StudentUser;
+            const remainingClasses = (studentData.classIds || []).filter(id => id !== classId);
+
+            // If no classes left, add to "No Class"
+            if (remainingClasses.length === 0) {
+                await updateDoc(doc(db, 'classes', NO_CLASS_ID), {
+                    studentIds: arrayUnion(studentId)
+                });
+                await updateDoc(doc(db, 'users', studentId), {
+                    classIds: arrayUnion(NO_CLASS_ID)
+                });
+            }
+        }
+    }
+
+    // 2. Remove class from all teachers' classIds
+    const teacherIds = classData.teacherIds || [];
+    for (const teacherId of teacherIds) {
+        await updateDoc(doc(db, 'users', teacherId), {
+            classIds: arrayRemove(classId)
+        });
+    }
+
+    // 3. Delete the class document
+    await deleteDoc(doc(db, 'classes', classId));
 };

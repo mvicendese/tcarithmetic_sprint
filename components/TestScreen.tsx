@@ -34,6 +34,8 @@ const TestScreen: React.FC<TestScreenProps> = ({ user, currentLevel, onComplete,
     const numInputRef = useRef<HTMLInputElement>(null);
     const denInputRef = useRef<HTMLInputElement>(null);
 
+    const [isFinishing, setIsFinishing] = useState(false);
+
     // Initialise questions when component mounts or level changes
     useEffect(() => {
         const loadQuestions = async () => {
@@ -55,6 +57,9 @@ const TestScreen: React.FC<TestScreenProps> = ({ user, currentLevel, onComplete,
     const finishTestRef = useRef<(overrideTimeLeft?: number) => void>(() => { });
 
     const finishTest = useCallback((overrideTimeLeft?: number) => {
+        if (isFinishing) return; // Prevent double finish
+        setIsFinishing(true);
+
         const totalTime = (Date.now() - questionStart) / 1000;
         const correct = answers.filter(a => a.isCorrect).length;
         const finalTimeLeft = overrideTimeLeft !== undefined ? overrideTimeLeft : timeLeft;
@@ -72,7 +77,7 @@ const TestScreen: React.FC<TestScreenProps> = ({ user, currentLevel, onComplete,
             answeredQuestions: answers,
         };
         onComplete(attempt);
-    }, [answers, currentLevel, timeLeft, onComplete, questionStart]);
+    }, [answers, currentLevel, timeLeft, onComplete, questionStart, isFinishing]);
 
     // Update ref whenever finishTest changes
     useEffect(() => {
@@ -97,7 +102,7 @@ const TestScreen: React.FC<TestScreenProps> = ({ user, currentLevel, onComplete,
 
     // Focus management when question changes
     useEffect(() => {
-        if (!loading && questions.length > 0) {
+        if (!loading && questions.length > 0 && !isFinishing) {
             const q = questions[currentIdx];
             const useIntegerInput = q.type === 'integer' || !q.correctAnswer.includes('/');
 
@@ -110,10 +115,10 @@ const TestScreen: React.FC<TestScreenProps> = ({ user, currentLevel, onComplete,
                 setTimeout(() => mainInputRef.current?.focus(), 50);
             }
         }
-    }, [currentIdx, loading, questions]);
+    }, [currentIdx, loading, questions, isFinishing]);
 
     const submitAnswer = () => {
-        if (isSubmitting) return;
+        if (isSubmitting || isFinishing) return;
         const q = questions[currentIdx];
         let submitted = '';
         let isCorrect = false;
@@ -153,6 +158,7 @@ const TestScreen: React.FC<TestScreenProps> = ({ user, currentLevel, onComplete,
             setCurrentIdx(i => i + 1);
         } else {
             // Final question logic
+            setIsFinishing(true);
             const totalTime = (Date.now() - questionStart) / 1000;
             const correct = newAnswers.filter(a => a.isCorrect).length;
             const attempt: TestAttempt = {
@@ -298,7 +304,8 @@ const TestScreen: React.FC<TestScreenProps> = ({ user, currentLevel, onComplete,
                             <button
                                 key={key}
                                 onClick={() => handleNumpadPress(key.toString())}
-                                className="h-14 bg-slate-700 hover:bg-slate-600 active:bg-slate-500 rounded-xl text-xl font-bold text-white shadow-md border-b-4 border-slate-900 active:border-b-0 active:translate-y-1 transition-all"
+                                disabled={isSubmitting || isFinishing}
+                                className={`h-14 bg-slate-700 rounded-xl text-xl font-bold text-white shadow-md border-b-4 border-slate-900 transition-all ${isSubmitting || isFinishing ? 'opacity-50 cursor-not-allowed' : 'hover:bg-slate-600 active:bg-slate-500 active:border-b-0 active:translate-y-1'}`}
                             >
                                 {key}
                             </button>
@@ -314,16 +321,17 @@ const TestScreen: React.FC<TestScreenProps> = ({ user, currentLevel, onComplete,
                     {/* Submit Button */}
                     <button
                         onClick={submitAnswer}
-                        className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 active:scale-[0.98] rounded-xl text-xl font-bold text-white shadow-lg shadow-blue-600/20 transition-all"
+                        disabled={isSubmitting || isFinishing}
+                        className={`w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl text-xl font-bold text-white shadow-lg shadow-blue-600/20 transition-all ${isSubmitting || isFinishing ? 'opacity-50 cursor-not-allowed' : 'hover:from-blue-500 hover:to-indigo-500 active:scale-[0.98]'}`}
                     >
-                        Submit Answer
+                        {isSubmitting || isFinishing ? 'Finishing...' : 'Submit Answer'}
                     </button>
                 </div>
 
             </div>
 
             {/* Submission Overlay */}
-            {isSubmitting && (
+            {(isSubmitting || isFinishing) && (
                 <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center">
                     <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mb-4"></div>
                     <h2 className="text-2xl font-bold text-white">Saving Results...</h2>

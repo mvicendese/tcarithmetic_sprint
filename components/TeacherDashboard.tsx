@@ -7,6 +7,8 @@ import StudentTest from './StudentTest';
 import ResultsScreen from './ResultsScreen';
 import { ThemeToggle } from './ThemeToggle';
 
+import { useNavigate } from 'react-router-dom';
+
 interface TeacherDashboardProps {
     user?: TeacherUser;
     onSwitchToAdminView?: () => void;
@@ -15,6 +17,7 @@ interface TeacherDashboardProps {
 const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ user, onSwitchToAdminView }) => {
     const { user: authUser, logout, changePassword } = useAuth();
     const currentUser = (user || authUser) as TeacherUser;
+    const navigate = useNavigate();
 
     const onLogout = logout;
     const onChangePassword = changePassword;
@@ -22,7 +25,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ user, onSwitchToAdm
     // State
     const [teacherClasses, setTeacherClasses] = useState<Class[]>([]);
     const [students, setStudents] = useState<StudentUser[]>([]);
-    const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
+    // selectedClassId removed in favor of routing
     const [isLoading, setIsLoading] = useState(true);
 
     const [newClassName, setNewClassName] = useState('');
@@ -135,49 +138,12 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ user, onSwitchToAdm
         setStudentQuery('');
     };
 
-    const renderBackButton = () => (
-        <button
-            onClick={() => {
-                setSelectedStudent(null);
-                setSelectedClassId(null);
-            }}
-            className="mb-4 text-blue-400 hover:text-blue-300 hover:underline flex items-center gap-2 transition-colors"
-        >
-            &larr; Back to Dashboard
-        </button>
-    );
-
-    const refreshSelectedStudent = async () => {
-        if (selectedStudent) {
-            try {
-                const updatedUser = await api.getUserProfile(selectedStudent.id);
-                if (updatedUser && updatedUser.role === 'student') {
-                    setSelectedStudent(updatedUser as StudentUser);
-                }
-            } catch (e) {
-                console.error("Failed to refresh selected student:", e);
-            }
-        }
-    };
-
     // Loading / error handling
     if (isLoading) {
         return <div className="p-8 text-center text-slate-400 animate-pulse">Loading dashboard...</div>;
     }
 
-    const selectedClass = teacherClasses.find((c) => c.id === selectedClassId);
-    if (selectedClass) {
-        return (
-            <div className="space-y-6 animate-fade-in">
-                {renderBackButton()}
-                <ClassDetailView
-                    aClass={selectedClass}
-                    onBack={() => setSelectedClassId(null)}
-                    onDataUpdate={fetchData}
-                />
-            </div>
-        );
-    }
+    // Removed: Class Detail View Rendering (now handled by Router)
 
     // Test Drive UI
     if (showTestDrive && isTestDriving && testDriveUser) {
@@ -307,7 +273,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ user, onSwitchToAdm
                                 .map((c) => (
                                     <div key={c.id} className="group relative">
                                         <div
-                                            onClick={() => setSelectedClassId(c.id)}
+                                            onClick={() => navigate(`/teacher/class/${c.id}`)}
                                             className="w-full text-left p-5 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-emerald-50 dark:hover:bg-emerald-600/20 border border-slate-200 dark:border-slate-600 hover:border-emerald-500/50 transition-all duration-200 cursor-pointer"
                                         >
                                             <div className="flex justify-between items-center">

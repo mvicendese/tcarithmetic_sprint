@@ -7,6 +7,8 @@ import TeacherDashboard from './components/TeacherDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import PrivateRoute from './components/PrivateRoute';
 
+import ClassDetailRoute from './components/ClassDetailRoute';
+
 // Wrapper for TeacherDashboard to handle navigation
 const TeacherDashboardWrapper: React.FC = () => {
     const { user } = useAuth();
@@ -55,6 +57,7 @@ const AppRouter: React.FC = () => {
 
                 <Route element={<PrivateRoute allowedRoles={['teacher']} />}>
                     <Route path="/teacher" element={<TeacherDashboardWrapper />} />
+                    <Route path="/teacher/class/:classId" element={<ClassDetailRoute />} />
                 </Route>
 
                 <Route element={<PrivateRoute allowedRoles={['teacher']} checkAdmin={true} />}>

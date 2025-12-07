@@ -40,8 +40,8 @@ const ClassDetailView: React.FC<{
         const [showBulkEdit, setShowBulkEdit] = useState(false);
         const [newStudentForm, setNewStudentForm] = useState({ firstName: '', surname: '', email: '', yearLevel: '' });
 
-        const fetchData = useCallback(async () => {
-            setIsLoading(true);
+        const fetchData = useCallback(async (showLoading = true) => {
+            if (showLoading) setIsLoading(true);
             try {
                 const users = await api.getAllUsers();
                 setAllUsers(users);
@@ -58,9 +58,9 @@ const ClassDetailView: React.FC<{
             } catch (e) {
                 console.error('Failed to fetch class details:', e);
             } finally {
-                setIsLoading(false);
+                if (showLoading) setIsLoading(false);
             }
-        }, [aClass.studentIds, aClass.teacherIds]);
+        }, [aClass.id, aClass.teacherIds]);
 
         useEffect(() => {
             fetchData();
@@ -253,7 +253,7 @@ const ClassDetailView: React.FC<{
                         onSave={() => {
                             setShowBulkEdit(false);
                             setBulkAddInitialData([]);
-                            fetchData(); // Refresh data instead of reload
+                            fetchData(false); // Refresh data gracefully
                             if (onDataUpdate) onDataUpdate();
                         }}
                     />

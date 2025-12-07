@@ -9,6 +9,7 @@ import StudentTest from './StudentTest';
 import ResultsScreen from './ResultsScreen';
 import ClassDetailView from './ClassDetailView';
 import TeacherDashboard from './TeacherDashboard';
+import StudentProfileView from './StudentProfileView';
 
 const AdminDashboard: React.FC = () => {
     const { logout, changePassword } = useAuth();
@@ -44,6 +45,7 @@ const AdminDashboard: React.FC = () => {
     // Student Search State
     const [studentQuery, setStudentQuery] = useState('');
     const [showStudentDropdown, setShowStudentDropdown] = useState(false);
+    const [selectedStudent, setSelectedStudent] = useState<StudentUser | null>(null);
 
     // Test Drive State
     const [showTestDrive, setShowTestDrive] = useState(false);
@@ -137,6 +139,27 @@ const AdminDashboard: React.FC = () => {
         }
     };
 
+    const handleDeleteClass = async (classId: string, className: string, e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (!window.confirm(`Are you sure you want to delete "${className}"?\n\nStudents will NOT be deleted - they will be moved to "No Class".`)) {
+            return;
+        }
+        try {
+            await api.deleteClass(classId);
+            setClasses(classes.filter(c => c.id !== classId));
+            // Refresh data to ensure UI is in sync
+            const [updatedTeachers, updatedStudents] = await Promise.all([
+                api.getAllTeachers(),
+                api.getAllStudents()
+            ]);
+            setTeachers(updatedTeachers);
+            setStudents(updatedStudents);
+        } catch (error) {
+            console.error("Failed to delete class", error);
+            alert(`Failed to delete class: ${(error as Error).message}`);
+        }
+    };
+
     // Test Drive Logic
     const startTestDrive = () => {
         setIsTestDriving(true);
@@ -202,6 +225,27 @@ const AdminDashboard: React.FC = () => {
                 </div>
                 <div className="max-w-7xl mx-auto p-6">
                     <ClassDetailView aClass={selectedClass} onBack={() => setSelectedClass(null)} />
+                </div>
+            </div>
+        );
+    }
+
+    // View Selected Student from Search
+    if (selectedStudent) {
+        return (
+            <div className="min-h-screen bg-slate-900">
+                <div className="bg-slate-800/50 backdrop-blur-md border-b border-slate-700 p-4 sticky top-0 z-20">
+                    <div className="max-w-7xl mx-auto">
+                        <button
+                            onClick={() => setSelectedStudent(null)}
+                            className="text-blue-400 hover:text-blue-300 flex items-center gap-2 transition-colors font-medium"
+                        >
+                            &larr; Back to Admin Dashboard
+                        </button>
+                    </div>
+                </div>
+                <div className="max-w-7xl mx-auto p-6">
+                    <StudentProfileView student={selectedStudent} onBack={() => setSelectedStudent(null)} />
                 </div>
             </div>
         );
@@ -438,11 +482,22 @@ const AdminDashboard: React.FC = () => {
                                                     {cls.name}
                                                 </div>
                                             </div>
-                                            <div className="text-right">
-                                                <div className="text-slate-700 dark:text-slate-300 font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
-                                                    {teacher ? `${teacher.firstName} ${teacher.surname}` : 'No Teacher'}
+                                            <div className="flex items-center gap-4">
+                                                <div className="text-right">
+                                                    <div className="text-slate-700 dark:text-slate-300 font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
+                                                        {teacher ? `${teacher.firstName} ${teacher.surname}` : 'No Teacher'}
+                                                    </div>
+                                                    <div className="text-sm text-slate-500">{(cls.studentIds || []).length} students</div>
                                                 </div>
-                                                <div className="text-sm text-slate-500">{(cls.studentIds || []).length} students</div>
+                                                {cls.id !== 'no-class' && (
+                                                    <button
+                                                        onClick={(e) => handleDeleteClass(cls.id, cls.name, e)}
+                                                        title="Delete Class"
+                                                        className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-100 dark:hover:bg-red-500/20 rounded-lg transition-colors"
+                                                    >
+                                                        🗑️
+                                                    </button>
+                                                )}
                                             </div>
                                         </button>
                                     );
@@ -523,7 +578,15 @@ const AdminDashboard: React.FC = () => {
                                             {students
                                                 .filter(s => s.firstName.toLowerCase().includes(studentQuery.toLowerCase()) || s.surname.toLowerCase().includes(studentQuery.toLowerCase()))
                                                 .map(s => (
-                                                    <div key={s.id} className="p-3 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer border-b border-slate-100 dark:border-slate-700 last:border-0 transition-colors">
+                                                    <div
+                                                        key={s.id}
+                                                        onClick={() => {
+                                                            setSelectedStudent(s);
+                                                            setShowStudentDropdown(false);
+                                                            setStudentQuery('');
+                                                        }}
+                                                        className="p-3 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer border-b border-slate-100 dark:border-slate-700 last:border-0 transition-colors"
+                                                    >
                                                         <div className="font-bold text-slate-900 dark:text-white">{s.firstName} {s.surname}</div>
                                                         <div className="text-xs text-slate-500 dark:text-slate-400">{s.email}</div>
                                                     </div>

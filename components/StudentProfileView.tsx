@@ -154,37 +154,52 @@ const StudentProfileView: React.FC<StudentProfileViewProps> = ({ student, onBack
                 </div>
             </div>
 
-            <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-8 gap-6 mb-6">
+            <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                 {/* Left Column: Student Info (replaces Start Test) */}
-                <div className="space-y-6 lg:col-span-3">
-                    <div className="bg-slate-800 rounded-xl p-8 border border-slate-700">
-                        <h2 className="text-2xl font-bold text-white mb-6">Student Information</h2>
+                <div className="space-y-6 lg:col-span-1">
+                    <div className="bg-slate-800 rounded-xl p-6 border border-slate-700 flex flex-col h-full">
+                        <div className="space-y-4 flex-grow">
+                            {/* Enrolled Classes (Inline) */}
+                            <div>
+                                {enrolledClasses.length === 0 ? (
+                                    <p className="text-slate-500 italic text-sm">Not enrolled in any classes</p>
+                                ) : (
+                                    <div className="space-y-1">
+                                        {enrolledClasses.map(c => (
+                                            <p key={c.id} className="text-xl font-bold text-slate-200">
+                                                {c.name}
+                                            </p>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
 
-                        {/* Current Level */}
-                        <div className="mb-6">
-                            <p className="text-lg text-slate-200">Current Level {student.currentLevel || 1}</p>
+                            {/* General AI Summary */}
+                            <div>
+                                <div className="flex items-center gap-2 mb-1">
+                                    <p className="text-xs text-slate-400 uppercase tracking-wider font-bold">Summary</p>
+                                </div>
+                                <div className="bg-slate-900/50 p-3 rounded-lg border border-slate-700 text-sm text-slate-300 leading-relaxed min-h-[80px]">
+                                    {student.aiSummary ? (
+                                        student.aiSummary
+                                    ) : (
+                                        <span className="text-slate-500 italic">No summary available.</span>
+                                    )}
+                                </div>
+                            </div>
                         </div>
 
-                        {/* Enrolled Classes */}
-                        <div>
-                            <h3 className="text-lg text-slate-200 mb-3">Enrolled class(es)</h3>
-                            {enrolledClasses.length === 0 ? (
-                                <p className="text-slate-500 text-lg italic">Not enrolled in any classes</p>
-                            ) : (
-                                <div className="space-y-2">
-                                    {enrolledClasses.map(c => (
-                                        <p key={c.id} className="text-lg text-slate-200">
-                                            {c.name}
-                                        </p>
-                                    ))}
-                                </div>
-                            )}
+                        {/* Current Level (at bottom, replaces button) */}
+                        <div className="mt-8 pt-6 border-t border-slate-700">
+                            <div className="w-full bg-slate-700/50 text-slate-300 font-bold py-3 px-4 rounded-lg text-center shadow-inner">
+                                Current Level {student.currentLevel || 1}
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Right Column: Test Results Table */}
-                <div className="lg:col-span-5">
+                <div className="lg:col-span-1">
                     <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-xl font-bold text-slate-200">Results</h3>
@@ -213,9 +228,8 @@ const StudentProfileView: React.FC<StudentProfileViewProps> = ({ student, onBack
                                     <tr className="text-slate-400 border-b border-slate-600">
                                         <th className="text-left py-2 font-medium">Date</th>
                                         <th className="text-left py-2 font-medium">Level</th>
-                                        <th className="text-left py-2 font-medium">Score</th>
+                                        <th className="text-left py-2 font-medium">Correct</th>
                                         <th className="text-left py-2 font-medium">Time Left</th>
-                                        <th className="text-left py-2 font-medium">Summary</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -233,7 +247,7 @@ const StudentProfileView: React.FC<StudentProfileViewProps> = ({ student, onBack
                                                 >
                                                     <td className="py-3">{result.dateStr}</td>
                                                     <td className="py-3">Level {result.level}</td>
-                                                    <td className="py-3 font-bold text-white">{result.score}</td>
+                                                    <td className="py-3 font-bold text-white">{result.correct}</td>
                                                     <td className="py-3">{formatTimeRemaining(result.timeRemaining)}</td>
                                                     {/*                                                 <td className="py-3">
                                                         {result.attempt.summary ? (

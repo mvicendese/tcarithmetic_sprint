@@ -67,14 +67,16 @@ const ProgressChart: React.FC<ProgressChartProps> = ({ data }) => {
                     dataKey="timestamp"
                     type="number"
                     domain={['dataMin', 'dataMax']}
+                    ticks={[
+                        Math.min(...data.map(d => d.timestamp)),
+                        Math.max(...data.map(d => d.timestamp))
+                    ]}
                     tickFormatter={(unixTime) => {
                         const date = new Date(unixTime);
                         if (isNaN(date.getTime())) return '';
                         return date.toLocaleString('en-AU', {
                             day: 'numeric',
                             month: 'short',
-                            hour: '2-digit',
-                            minute: '2-digit',
                             timeZone: 'Australia/Melbourne'
                         });
                     }}

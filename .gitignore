@@ -43,3 +43,5 @@ users.json
 serviceAccountKey.json
 factory_scripts/
 factory_scripts/_backup/
+
+.firebase/
